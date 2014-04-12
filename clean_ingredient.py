@@ -3,7 +3,7 @@
 
 # Name: Sheridan Sunier
 # Project: Kitchen Corner
-# Last Modified: 5.6.2015
+# Last Modified: 4.9.2014
 
 
 """
@@ -49,11 +49,15 @@ def split(recipe):
 		m = re.match(p, ingred)
 		
 		x = getMeasurement(m.group(5))
+
 		if x is None:
-			i[m.group(5)][m.group(1)] = None
+			i[m.group(5)][m.group(1)] = ""
+
 		else:
-			cleaned = removeMeasurement(m.group(5), x)
+			cleaned = removeMeasurement(m.group(5),x)
+
 			i[cleaned][m.group(1)] = x
+
 	print i
 	return i
 
@@ -67,7 +71,7 @@ def getMeasurement(group):
 	value = None
 	for k in re.findall('\w+', group):
 		if k in meaSet:
-			value = k
+			value = re.sub("s$", "",k)
 			break
 	return value
 
@@ -79,6 +83,7 @@ def removeMeasurement(group, measurement):
 		clean += k + " "
 	return clean
 
+
 """
 Testing Data - Comment back out when done
 """
@@ -87,10 +92,15 @@ RETRIES = 0
 
 client = Client(api_id='d9efc743', api_key='bbb0c1439402e1181312a67278a37342', timeout=TIMEOUT, retries=RETRIES)
 
-search = client.search('curry paste')
+search = client.search('red curry paste')
 match = search.matches[0]
 recipe = client.recipe(match.id)
+
+#print recipe
 
 
 if __name__ == '__main__':
 	split(recipe)
+
+
+
