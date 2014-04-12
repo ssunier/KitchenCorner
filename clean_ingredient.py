@@ -90,7 +90,7 @@ Testing Data - Comment back out when done
 TIMEOUT = 5.0
 RETRIES = 0
 
-client = Client(api_id='d9efc743', api_key='bbb0c1439402e1181312a67278a37342', timeout=TIMEOUT, retries=RETRIES)
+client = Client(api_id=API_ID, api_key=API_KEY, timeout=TIMEOUT, retries=RETRIES)
 
 search = client.search('red curry paste')
 match = search.matches[0]
