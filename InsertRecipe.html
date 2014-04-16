@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>KitchenCorner Page</title>
+</head>
+<body bgcolor="white">
+<form method='post' action='InsertRecipe.cgi'><p>
+<h2>Insert a new recipe!</h2>
+<p>* fields are required.</p>
+<table cols='4'>
+<tr><td>Title*</td><td><input type='text' name='title' value=''></td></tr>
+<tr><td>Added by*</td><td><input type='text' name='addedby' value=''></td></tr>
+<tr><td>Image</td><td><input type='text' name='image' value=''></td></tr>
+<tr><td>Total time*</td><td><input type='text' name='total-time' value=''></td><td>minutes</td></tr>
+<tr><td>Ingredients*</td><tr>
+  <tr><td>Quantity1</td><td><input type='text' name='quantity1' value=''></td>
+  <td>Name1</td><td><input type='text' name='name1' value=''></td>
+  <td>Unit1</td><td><input type='text' name='unit1' value=''></td></tr>
+  <tr><td>Quantity2</td><td><input type='text' name='quantity2' value=''></td>
+  <td>Name2</td><td><input type='text' name='name2' value=''></td>
+  <td>Unit2</td><td><input type='text' name='unit2' value=''></td>
+  <tr><td>Quantity3</td><td><input type='text' name='quantity3' value=''></td>
+  <td>Name3</td><td><input type='text' name='name3' value=''></td>
+  <td>Unit3</td><td><input type='text' name='unit3' value=''></td>
+  <tr><td>Quantity4</td><td><input type='text' name='quantity4' value=''></td>
+  <td>Name4</td><td><input type='text' name='name4' value=''></td>
+  <td>Unit4</td><td><input type='text' name='unit4' value=''></td></tr>
+</table>
+<table cols = '1'>
+<tr><td>Instructions*</td><td><textarea name="instructions" rows="5" cols="30"></textarea></td></tr>
+</table>
+<input type='submit' name='submit' value='Insert into database'>
+</form>
+<form method='post' action='Options.cgi'><p>
+<input type='submit' name='submit' value='Return to main menu'>
+</form>
+</body>
+</html>
