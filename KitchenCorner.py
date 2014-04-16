@@ -72,6 +72,77 @@ def insertToRecipeQuantity(cursor,recipe_title,ingredient_name,quantity):
    
     data = (recipe_id,ingredient_id,quantity,)
     cursor.execute('INSERT INTO recipequantity(rid,id,quantity) VALUES (%s,%s,%s)',data)
+
+#returns as a tuple the values of all the fields that the user completed while searching for recipes
+def getFormInputs(database,form_data):
+    inputTuple = tuple();
+    if 'title' in form_data:
+        inputTuple += ('%' + form_data.getfirst('title') + '%',)
+    if 'addedby' in form_data:
+        inputTuple += (form_data.getfirst('addedby'),) 
+    if 'total-time' in form_data:
+        inputTuple += (form_data.getfirst('total-time'),)
+    if 'instructions' in form_data: 
+        inputTuple += ('%' + form_data.getfirst('instructions') + '%',)
+    return inputTuple
+
+#sets the end of the search query based on the fields that the user completed while searching for recipes
+def setEndQuery(database,form_data):
+    inputString = '';
+    if 'title' in form_data:
+        inputString += 'title LIKE %s AND '
+    if 'addedby' in form_data:
+        inputString += 'addedby = %s AND '
+    if 'total-time' in form_data:
+        inputString += 'totaltime < %s AND '
+    if 'instructions' in form_data:
+        inputString += 'instructions LIKE %s AND '
+    length = len(inputString) - 5
+    return inputString[0:length]
+
+def searchRecipeTable(cursor,database,form_data):
+    data = getFormInputs(database,form_data)
+    endQuery = setEndQuery(database,form_data) 
+
+    cursor.execute('SELECT rid FROM recipe WHERE ' + endQuery,data)
+    row = cursor.fetchone()
+    print row
+    #recipe_id = '{rid}'.format(**row)
+    #return recipe_id
+
+def getIngredientInputs(database,form_data):
+    inputString = '';
+    if 'ingredient1' in form_data:
+        inputString += 'ingredient = %s OR'
+    if 'ingredient2' in form_data:
+        inputString += 'ingredient = %s OR'
+    if 'ingredient3' in form_data:
+        inputString += 'ingredient = %s OR'
+    if 'ingredient4' in form_data:
+        inputString += 'ingredient = %s OR'
+    return inputString
+
+
+
+def getNumInputs(database,form_data):
+    count = 0;
+    if 'title' in form_data:
+        count += 1
+    if 'addedby' in form_data:
+        count += 1
+    if 'total-time' in form_data:
+        count += 1
+    if 'ingredient1' in form_data:
+        count += 1
+    if 'ingredient2' in form_data:
+        count += 1
+    if 'ingredient3' in form_data:
+        count += 1
+    if 'ingredient4' in form_data:
+        count += 1
+    if 'instructions' in form_data:
+        count +=1
+    return count
     
 def main():
     cursor = getCursor('skim22_db') 
@@ -81,4 +152,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-    #print main(sys.argv[1],sys.argv[2],sys.argv[3])
+    #print main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
+
+  
