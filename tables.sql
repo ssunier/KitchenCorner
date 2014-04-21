@@ -36,7 +36,7 @@ create table users (
 
 INSERT into users VALUES (1, 'skim22', 'abc', 'Soojin'),
        	    	  	 (2, 'ssunier','random', 'Sheridan'),
-			 (0, 'test','lalala','TestUser');
+			       (0, 'test','lalala','TestUser');
 
 create table fridge (
        fid int auto_increment not null primary key,
@@ -45,9 +45,9 @@ create table fridge (
        )
        ENGINE = InnoDB;
 
-INSERT into fridge VALUES (1, 1),
+INSERT into fridge VALUES (1, 0),
        	    	   	  (2, 2),
-			  (3, 3);
+			        (3, 1);
 
 create table ingredient (
       id int auto_increment not null primary key,
@@ -57,18 +57,18 @@ create table ingredient (
       ENGINE = InnoDB;
 
 INSERT into ingredient VALUES (1, 'flour', 'cup'),
-       	    	       	      (2, 'cheese', 'cup'),
-			      (3, 'broccoli', 'head'),
-			      (4, 'garlic', 'clove'),
-			      (5, 'chicken', 'lb'),
-			      (6, 'rotini', 'lb'),
-			      (7, 'pepperoni','cup'),
-			      (8, 'black olives', 'cup'),
-			      (9, 'italian dressing', 'bottle'),
-			      (10, 'vanilla yogurt','oz'),
-			      (11, 'pumpkin','cup'),
-			      (12,'ground nutmeg','tsp'),
-			      (13, 'ground cinnamon','tsp');
+       	    	       	(2, 'cheese', 'cup'),
+                              (3, 'broccoli', 'head'),
+                              (4, 'garlic', 'clove'),
+                              (5, 'chicken', 'lb'),
+                              (6, 'rotini', 'lb'),
+                              (7, 'pepperoni','cup'),
+                              (8, 'black olives', 'cup'),
+                              (9, 'italian dressing', 'bottle'),
+                              (10, 'vanilla yogurt','oz'),
+                              (11, 'pumpkin','cup'),
+                              (12,'ground nutmeg','tsp'),
+                              (13, 'ground cinnamon','tsp');
 
 create table fridgequantity (
        fid int not null,
@@ -79,9 +79,14 @@ create table fridgequantity (
        )
        ENGINE = InnoDB;
 
-INSERT into fridgequantity VALUES (1, 1, 5),
-       	    		   	  (2, 2, 1),
-				  (3, 3, 7);
+INSERT into fridgequantity VALUES   (1, 1, 5),
+       	    		   	      (2, 2, 1),
+                                    (3, 3, 7),
+                                    (3, 6, 2),
+                                    (3, 7, 3),
+                                    (3, 8, 2.5),
+                                    (3, 2, 6),
+                                    (3, 9, 1);
 
 
 create table recipequantity (
@@ -92,3 +97,13 @@ create table recipequantity (
        foreign key (id) references ingredient(id) on delete restrict
        )
        ENGINE = InnoDB;
+INSERT into recipequantity VALUES
+                              (1,6,1),
+                              (1,7,2),
+                              (1,8,2),
+                              (1,2,2),
+                              (1,9,1),
+                              (2,10,8),
+                              (2,11,1),
+                              (2,12,.25),
+                              (2,13,.25);
