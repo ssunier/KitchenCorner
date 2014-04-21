@@ -36,7 +36,7 @@ create table users (
 
 INSERT into users VALUES (1, 'skim22', 'abc', 'Soojin'),
        	    	  	 (2, 'ssunier','random', 'Sheridan'),
-			       (0, 'test','lalala','TestUser');
+			       (3, 'test','lalala','TestUser');
 
 create table fridge (
        fid int auto_increment not null primary key,
@@ -45,9 +45,9 @@ create table fridge (
        )
        ENGINE = InnoDB;
 
-INSERT into fridge VALUES (1, 0),
-       	    	   	  (2, 2),
-			        (3, 1);
+INSERT into fridge VALUES (0, 3),
+       	    	   	  (0, 2),
+			  (0, 1);
 
 create table ingredient (
       id int auto_increment not null primary key,
@@ -80,7 +80,7 @@ create table fridgequantity (
        ENGINE = InnoDB;
 
 INSERT into fridgequantity VALUES   (1, 1, 5),
-       	    		   	      (2, 2, 1),
+       	    		   	    (2, 2, 1),
                                     (3, 3, 7),
                                     (3, 6, 2),
                                     (3, 7, 3),
