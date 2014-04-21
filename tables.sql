@@ -15,17 +15,6 @@ create table recipe (
        ) 
        ENGINE = InnoDB;
 
-INSERT into recipe VALUES (0, 'Italian Pasta Salad',20,null,1,
-       	    	   	      'In large bowl, toss all ingredients together. Add dressing last and mix well.'),
-			  (0, 'Pumpkin Pudding',10,null,2,
-			      '1. In a bowl, combine pumpkin, molasses and spices. Gradually add milk. 
-			      Add pudding mix; beat slowly with an electric mixer until thick, about 1 minute. 
-			      Fold in whipped cream.
-			      2. Pour into a serving bowl or individual serving dishes. 
-			      Chill for 1 hour. 
-			      If desired, top each serving with a dollop of whipped cream and a sprinkle of cinnamon.');
-
-
 create table users (
        uid int auto_increment not null primary key,
        username varchar(50),
@@ -34,20 +23,12 @@ create table users (
        )
        ENGINE = InnoDB;
 
-INSERT into users VALUES (1, 'skim22', 'abc', 'Soojin'),
-       	    	  	 (2, 'ssunier','random', 'Sheridan'),
-			       (3, 'test','lalala','TestUser');
-
 create table fridge (
        fid int auto_increment not null primary key,
        uid int not null,
        foreign key (uid) references users(uid) on delete restrict
        )
        ENGINE = InnoDB;
-
-INSERT into fridge VALUES (0, 3),
-       	    	   	  (0, 2),
-			  (0, 1);
 
 create table ingredient (
       id int auto_increment not null primary key,
@@ -56,8 +37,26 @@ create table ingredient (
       )
       ENGINE = InnoDB;
 
+create table fridgequantity (
+       fid int not null,
+       id int not null,
+       quantity decimal(4,2),
+       foreign key (fid) references fridge(fid) on delete restrict,
+       foreign key (id) references ingredient(id) on delete restrict
+       )
+       ENGINE = InnoDB;
+
+create table recipequantity (
+       rid int not null,
+       id int not null,
+       quantity decimal(4,2),
+       foreign key (rid) references recipe(rid) on delete restrict,
+       foreign key (id) references ingredient(id) on delete restrict
+       )
+       ENGINE = InnoDB;
+
 INSERT into ingredient VALUES (1, 'flour', 'cup'),
-       	    	       	(2, 'cheese', 'cup'),
+                              (2, 'cheese', 'cup'),
                               (3, 'broccoli', 'head'),
                               (4, 'garlic', 'clove'),
                               (5, 'chicken', 'lb'),
@@ -70,33 +69,28 @@ INSERT into ingredient VALUES (1, 'flour', 'cup'),
                               (12,'ground nutmeg','tsp'),
                               (13, 'ground cinnamon','tsp');
 
-create table fridgequantity (
-       fid int not null,
-       id int not null,
-       quantity decimal(4,2),
-       foreign key (fid) references fridge(fid) on delete restrict,
-       foreign key (id) references ingredient(id) on delete restrict
-       )
-       ENGINE = InnoDB;
+INSERT into fridge (uid) VALUES (1),(2),(3);
 
-INSERT into fridgequantity VALUES   (1, 1, 5),
-       	    		   	    (2, 2, 1),
-                                    (3, 3, 7),
-                                    (3, 6, 2),
-                                    (3, 7, 3),
-                                    (3, 8, 2.5),
-                                    (3, 2, 6),
-                                    (3, 9, 1);
+INSERT into fridgequantity VALUES
+                              (1, 1, 5),
+                              (3, 2, 1),
+                              (2, 3, 7),
+                              (2, 6, 2),
+                              (2, 7, 3),
+                              (2, 8, 2.5),
+                              (2, 2, 6),
+                              (2, 9, 1);
 
+INSERT into recipe VALUES
+      (3, 'Italian Pasta Salad',20,null,1,
+            'In large bowl, toss all ingredients together. Add dressing last and mix well.'),
+      (3, 'Pumpkin Pudding',10,null,2,
+            '1. In a bowl, combine pumpkin, molasses and spices. Gradually add milk. Add pudding mix; beat slowly with an electric mixer until thick, about 1 minute. 
+             2. Fold in whipped cream.
+             3. Pour into a serving bowl or individual serving dishes. 
+             4. Chill for 1 hour. 
+             5. If desired, top each serving with a dollop of whipped cream and a sprinkle of cinnamon.');
 
-create table recipequantity (
-       rid int not null,
-       id int not null,
-       quantity decimal(4,2),
-       foreign key (rid) references recipe(rid) on delete restrict,
-       foreign key (id) references ingredient(id) on delete restrict
-       )
-       ENGINE = InnoDB;
 INSERT into recipequantity VALUES
                               (1,6,1),
                               (1,7,2),
