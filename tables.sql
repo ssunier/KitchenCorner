@@ -24,7 +24,7 @@ INSERT into recipe VALUES (0, 'Italian Pasta Salad',20,null,1,
 			      2. Pour into a serving bowl or individual serving dishes. 
 			      Chill for 1 hour. 
 			      If desired, top each serving with a dollop of whipped cream and a sprinkle of cinnamon.');
-			  
+
 
 create table users (
        uid int auto_increment not null primary key,
@@ -34,10 +34,10 @@ create table users (
        )
        ENGINE = InnoDB;
 
-INSERT into users VALUES (0, 'skim22', 'abc', 'Soojin'),
-       	    	  	 (0, 'ssunier','random', 'Sheridan'),
+INSERT into users VALUES (1, 'skim22', 'abc', 'Soojin'),
+       	    	  	 (2, 'ssunier','random', 'Sheridan'),
 			 (0, 'test','lalala','TestUser');
-			 
+
 create table fridge (
        fid int auto_increment not null primary key,
        uid int not null,
@@ -45,9 +45,9 @@ create table fridge (
        )
        ENGINE = InnoDB;
 
-INSERT into fridge VALUES (0, 1),
-       	    	   	  (0, 2),
-			  (0, 3);
+INSERT into fridge VALUES (1, 1),
+       	    	   	  (2, 2),
+			  (3, 3);
 
 create table ingredient (
       id int auto_increment not null primary key,
@@ -73,7 +73,7 @@ INSERT into ingredient VALUES (1, 'flour', 'cup'),
 create table fridgequantity (
        fid int not null,
        id int not null,
-       quantity integer,
+       quantity decimal(4,2),
        foreign key (fid) references fridge(fid) on delete restrict,
        foreign key (id) references ingredient(id) on delete restrict
        )
@@ -87,7 +87,7 @@ INSERT into fridgequantity VALUES (1, 1, 5),
 create table recipequantity (
        rid int not null,
        id int not null,
-       quantity integer,
+       quantity decimal(4,2),
        foreign key (rid) references recipe(rid) on delete restrict,
        foreign key (id) references ingredient(id) on delete restrict
        )
