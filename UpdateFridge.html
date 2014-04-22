@@ -4,13 +4,25 @@
 </head>
 <body bgcolor="white">
 <form method='post' action='UpdateFridge.cgi'><p>
-<h2>Update your fridge!</h2>
+<h2>Update and view your fridge!</h2>
 <table cols='4'>
-<tr><td>Quantity</td><td><input type='text' name='quantity' value=''></td>
-<td>Ingredient name</td><td><input type='text' name='ingredient' value=''></td>
-<td>Unit</td><td><input type='text' name='unit' value=''></td></tr>
+<p>* fields are required</p>
+<tr><td>Fridge ID*</td><td><input type='text' name='fid' value=''></td></tr>
+<tr><td>Ingredients</td><tr>
+  <tr><td>Quantity1</td><td><input type='text' name='quantity1' value=''></td>
+  <td>Unit1</td><td><input type='text' name='unit1' value=''></td>
+  <td>Name1</td><td><input type='text' name='name1' value=''></td></tr>
+  <tr><td>Quantity2</td><td><input type='text' name='quantity2' value=''></td>
+  <td>Unit2</td><td><input type='text' name='unit2' value=''></td>
+  <td>Name2</td><td><input type='text' name='name2' value=''></td>
+  <tr><td>Quantity3</td><td><input type='text' name='quantity3' value=''></td>
+  <td>Unit3</td><td><input type='text' name='unit3' value=''></td>
+  <td>Name3</td><td><input type='text' name='name3' value=''></td>
+  <tr><td>Quantity4</td><td><input type='text' name='quantity4' value=''></td>
+  <td>Unit4</td><td><input type='text' name='unit4' value=''></td>
+  <td>Name4</td><td><input type='text' name='name4' value=''></td></tr> 
 </table>
-<input type='submit' name='submit' value='Update Fridge'>
+<input type='submit' name='submit' value='Update and view fridge'>
 </form>
 <form method='post' action='Options.cgi'><p>
 <input type='submit' name='submit' value='Return to main menu'>
