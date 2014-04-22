@@ -7,6 +7,7 @@ import MySQLdb
 import dbconn
 import cgi_utils_sda
 from skim22_dsn import DSN
+from decimal import Decimal
 
 def getCursor(database):
     DSN['database'] = database
@@ -142,7 +143,7 @@ def setEndQuery(database,form_data):
     if 'addedby' in form_data:
         inputString += 'addedby = %s AND '
     if 'total-time' in form_data:
-        inputString += 'totaltime < %s AND '
+        inputString += 'totaltime <= %s AND '
     if 'instructions' in form_data:
         inputString += 'instructions LIKE %s AND '
     length = len(inputString) - 5
@@ -163,14 +164,14 @@ def getIngredientFormInputs(database,form_data):
 def setIngredientEndQuery(database,form_data):
     inputString = '';
     if 'ingredient1' in form_data:
-        inputString += 'first.name LIKE %s OR '
+        inputString += 'first.name LIKE %s AND '
     if 'ingredient2' in form_data:
-        inputString += 'second.name LIKE %s OR '
+        inputString += 'second.name LIKE %s AND '
     if 'ingredient3' in form_data:
-        inputString += 'third.name LIKE %s OR '
+        inputString += 'third.name LIKE %s AND '
     if 'ingredient4' in form_data:
-        inputString += 'fourth.name LIKE %s OR '
-    length = len(inputString) - 4
+        inputString += 'fourth.name LIKE %s AND '
+    length = len(inputString) - 5
     return '(' + inputString[0:length] + ')'
 
 def processSearchRequest(cursor,cursor2,database,form_data):
@@ -185,36 +186,36 @@ def processSearchRequest(cursor,cursor2,database,form_data):
         recipe_endQuery = setEndQuery(database,form_data) 
      
         #Step 1: finds any matching recipes based on title,addedby,totaltime and/or instructions
-        cursor.execute('SELECT rid,title,addedby,instructions FROM recipe WHERE ' + recipe_endQuery,recipe_data)
+        cursor.execute('SELECT rid,title,addedby,totaltime,instructions FROM recipe WHERE ' + recipe_endQuery,recipe_data)
         row = cursor.fetchone()
         if row == None: 
             msg += 'No matches found'
             return msg
-        rid = '{rid}'.format(**row)
-
+              
         #Step 2: if the user provided ingredients as search inputs, check to see if these ingredients are
         #in any of the recipes found in Step 1
         while row != None:
+            rid = '{rid}'.format(**row)
             ingredient_data = getIngredientFormInputs(database,form_data)
             matchesIngredient = False;
             if ingredient_data != tuple():
                 ingredient_endQuery = setIngredientEndQuery(database,form_data)
                 cursor2.execute('DROP TABLE if exists recipeWithIngredients')
                 cursor2.execute('CREATE TABLE recipeWithIngredients as select recipe.rid,title,name from recipe,recipequantity,ingredient where recipequantity.rid = recipe.rid and recipequantity.id = ingredient.id and recipe.rid = %s', (rid,))
-                cursor2.execute('SELECT recipe.rid,recipe.title,first.name,second.name,third.name,fourth.name FROM recipe,recipeWithIngredients as first,recipeWithIngredients as second, recipeWithIngredients as third, recipeWithIngredients as fourth WHERE ' + ingredient_endQuery,ingredient_data)
+                cursor2.execute('SELECT recipe.rid FROM recipe,recipeWithIngredients as first,recipeWithIngredients as second, recipeWithIngredients as third, recipeWithIngredients as fourth WHERE recipe.rid = first.rid AND recipe.rid = second.rid AND recipe.rid = third.rid AND recipe.rid = fourth.rid AND ' + ingredient_endQuery,ingredient_data)
                 row2 = cursor2.fetchone()
                 if row2 != None:
                     matchesIngredient = True
-                    print "matchesIngredient 2"
                
         #Step 3: At this point, matching recipes (if any) have been found from step 1 or step 2.
         #Stores information about matching recipes in a message to the user
-            if (matchesIngredient or (ingredient_data != tuple())):
+            if (matchesIngredient or (ingredient_data == tuple())):
                 rid = '{rid}'.format(**row)
                 title = '{title}'.format(**row)
                 addedby = '{addedby}'.format(**row)
+                totaltime =  '{totaltime}'.format(**row)
                 instructions = '{instructions}'.format(**row)
-                msg += '<p> Recipe ID: ' + rid + "<p> Title: " + title + "<p> Addedby: " + addedby
+                msg += '<p> Recipe ID: ' + rid + "<p> Title: " + title + "<p> Addedby: " + addedby + "<p> Totaltime: " + totaltime
 
                 #gets ingredients of the recipe
                 msg += '<p> Ingredients: '
@@ -268,14 +269,14 @@ def updateFridgeQuantity(cursor,fid,ingredient_name,quantity):
     data = (fid,ingredient_id,)
     cursor.execute('SELECT quantity FROM fridgequantity WHERE fid = %s AND id = %s',data)
     row = cursor.fetchone()
-    old_quantity = '{quantity}'.format(**row) 
 
     if row == None: 
         data = (fid,ingredient_id,quantity,)
         cursor.execute('INSERT INTO fridgequantity(fid,id,quantity) VALUES (%s,%s,%s)',data)
         msg += 'Ingredient ' +  ingredient_name + ' does not already exist in the fridge; added new entry.'
     else:
-        new_quantity = int(old_quantity) + int(quantity)
+        old_quantity = '{quantity}'.format(**row) 
+        new_quantity = Decimal(old_quantity) + Decimal(quantity)
         data = (new_quantity,fid,ingredient_id,)
         cursor.execute('UPDATE fridgequantity SET quantity = %s WHERE fid = %s AND id = %s',data)
         msg += 'Ingredient ' + ingredient_name + ' already exists in the fridge; updated quantity to ' + str(new_quantity) + '.'
@@ -315,5 +316,3 @@ def main():
 if __name__ == '__main__':
     main()
     #print main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
-
-  
