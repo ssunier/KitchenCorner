@@ -1,4 +1,4 @@
-!/usr/local/bin/python2.7
+#!/usr/local/bin/python2.7
 
 import sys
 
@@ -14,12 +14,13 @@ import KitchenCorner
 if __name__ == '__main__':
     print 'Content-type: text/html\n'
     cursor = KitchenCorner.getCursor('skim22_db') 
+    cursor2 = KitchenCorner.getCursor('skim22_db') 
 
     tmpl = cgi_utils_sda.file_contents('SearchRecipe.html')
-    msg = ''  
+    mess = ''  
     form_data = cgi.FieldStorage()
-    
-    #KitchenCorner.searchRecipeTable(cursor,'skim22_db',form_data)
 
-    page = tmpl.format(message=msg)
+    print KitchenCorner.processSearchRequest(cursor,cursor2,'skim22_db',form_data)
+
+    page = tmpl.format(message=mess)
     print page
