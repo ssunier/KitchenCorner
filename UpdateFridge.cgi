@@ -18,6 +18,7 @@ if __name__ == '__main__':
     tmpl = cgi_utils_sda.file_contents('UpdateFridge.html')
     msg = ''  
     form_data = cgi.FieldStorage()
+    print KitchenCorner.updateAndViewFridge(cursor,'skim22_db',form_data)
     
     page = tmpl.format(message=msg)
     print page
