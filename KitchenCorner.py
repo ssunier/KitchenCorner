@@ -6,7 +6,7 @@ import MySQLdb
 
 import dbconn
 import cgi_utils_sda
-from ssunier_dsn import DSN
+from skim22_dsn import DSN
 from decimal import Decimal
 
 def getCursor(database):
@@ -116,8 +116,6 @@ def processInsertRequest(cursor,database,form_data):
         msg += inputFeedback
     return msg
         
-
-    
 
 
 #*******Methods for searching a recipe***********
@@ -235,6 +233,72 @@ def processSearchRequest(cursor,cursor2,database,form_data):
         msg += 'Please input a title for searching.'
     return msg
 
+#**************Methods for viewing recipes from the fridge*********************
+def processFridge(cursor,cursor2, database, form_data):
+    msg = ''
+    fid = 2
+    # currently uses fid =2
+    # get the recipes that you have any of the ingredients for in your fridge
+    cursor.execute('SELECT rid FROM recipequantity,fridgequantity WHERE recipequantity.id = fridgequantity.id AND fid=%s group by 1', fid)
+    row = cursor.fetchone()
+    #there are things in your fridge that match recipes
+    if row == None:
+        msg += 'Your fridge is empty'
+        return msg
+
+    while row != None:
+        # this is a recipe you could possibly make (maybe)
+        rid = '{rid}'.format(**row)
+        #rid = row[0]
+        data = (fid,rid,)
+
+        print rid
+        
+        # you need to check if you have everything you need to make said recipe
+
+        # get number of ingredients required for the recipe
+        cursor2.execute('SELECT count(*) from recipequantity where rid=%s',rid)
+        num = cursor2.fetchone()
+        print num
+        numReq = '{count(*)}'.format(**row)'
+        # get the number of ingredients for said recipe you have in your fridge
+        cursor2.execute('SELECT rid, count(*) as c from recipequantity,fridgequantity WHERE recipequantity.id = fridgequantity.id AND fid=%s AND rid=%s group by 1',data)
+        fr = cursor2.fetchone()
+        numFr = '{c}'.format(**row)
+
+        # if you have the same number of ingredients you haave all of the types required
+        if numFr == numReq:
+            #check quantities
+            cursor2.execute('SELECT fridgequantity.id as id, recipequantity.quantity as rq, fridgequantity.quantity as fq from recipequantity join fridgequantity on recipequantity.id = fridgequantity.id where fid=%s and rid=%s group by 1',data)
+            rowz = cursor2.fetchone()
+
+            # boolean to indicate whether or not you were able to do the recipe
+            possible = True
+
+            while rowz != None:
+                id = '{id}'.format(**row)
+                rq = '{rq}'.format(**row)
+                rq = Decimal(rq)
+                fq = '{rq}'.format(**row)
+                fq = Decimal(fq)
+                if fq < rq:
+                    # you cannot do this recipe so break out of the loop
+                    possible = False
+                    rowz=None
+                    break
+                rowz = cursor.fetchone()
+
+            # when you exit the loop check if you were able to make that recipe
+            if possible == True:
+                cursor2.execute('SELECT title from recipe where rid=%s',rid)
+                title = '{title}'.format(**row)
+                msg += title
+
+        else:
+            continue
+    return msg
+            
+
 #**************Methods for viewing and updating the fridge*********************
 
 def viewFridgeContents(cursor,fid):
@@ -258,7 +322,6 @@ def viewFridgeContents(cursor,fid):
 
 def updateFridgeQuantity(cursor,fid,ingredient_name,quantity):
     msg = ''
-
     #gets ingredient ID from name
     data = (ingredient_name,)
     cursor.execute('SELECT id FROM ingredient WHERE name = %s',data)
@@ -285,8 +348,8 @@ def updateFridgeQuantity(cursor,fid,ingredient_name,quantity):
 
 def updateAndViewFridge(cursor,database,form_data):
     msg = ''
-    
-    if 'fid' in form_data: 
+    fid = 2
+    if 'fid' == 2: 
         fid = form_data.getfirst('fid')
         for i in range(1,5):
             if 'quantity' + `i` in form_data and 'name' + `i` in form_data and 'unit' + `i` in form_data:
@@ -308,7 +371,7 @@ def updateAndViewFridge(cursor,database,form_data):
     return msg
             
 def main():
-    cursor = getCursor('ssunier_db') 
+    cursor = getCursor('skim22_db') 
     #insertToRecipe(cursor,'Orange2',33,60,'Step is blah')
     #print recipeExists(cursor,'Orange')
     #insertToRecipeQuantity(cursor,'Orange','flour',4)
