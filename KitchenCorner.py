@@ -6,7 +6,7 @@ import MySQLdb
 
 import dbconn
 import cgi_utils_sda
-from skim22_dsn import DSN
+from ssunier_dsn import DSN
 from decimal import Decimal
 
 def getCursor(database):
@@ -308,7 +308,7 @@ def updateAndViewFridge(cursor,database,form_data):
     return msg
             
 def main():
-    cursor = getCursor('skim22_db') 
+    cursor = getCursor('ssunier_db') 
     #insertToRecipe(cursor,'Orange2',33,60,'Step is blah')
     #print recipeExists(cursor,'Orange')
     #insertToRecipeQuantity(cursor,'Orange','flour',4)
