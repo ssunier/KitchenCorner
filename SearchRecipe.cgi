@@ -13,8 +13,8 @@ import KitchenCorner
 
 if __name__ == '__main__':
     print 'Content-type: text/html\n'
-    cursor = KitchenCorner.getCursor('ssunier_db') 
-    cursor2 = KitchenCorner.getCursor('ssunier_db') 
+    cursor = KitchenCorner.getCursor('skim22_db') 
+    cursor2 = KitchenCorner.getCursor('skim22_db') 
 
     tmpl = cgi_utils_sda.file_contents('SearchRecipe.html')
     mess = ''  
