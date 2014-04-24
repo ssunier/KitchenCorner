@@ -7,7 +7,7 @@ import cgitb; cgitb.enable()
 import cgi_utils_sda
 
 import MySQLdb
-from ssunier_dsn import DSN
+from skim22_dsn import DSN
 import dbconn
 import KitchenCorner
 
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     mess = ''  
     form_data = cgi.FieldStorage()
 
-    print KitchenCorner.processSearchRequest(cursor,cursor2,'sssunier_db',form_data)
+    print KitchenCorner.processSearchRequest(cursor,cursor2,'skim22_db',form_data)
 
     page = tmpl.format(message=mess)
     print page
